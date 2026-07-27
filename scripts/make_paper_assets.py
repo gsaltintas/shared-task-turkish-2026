@@ -227,11 +227,18 @@ def fig_category_overall():
     cats = sorted(counts, key=lambda c: -pooled[c])
     ys = np.arange(len(cats))[::-1]
 
-    fig, ax = plt.subplots(figsize=(3.2, 2.6))
+    # renk = zorluk (koyu = zor); difficulty figuruyle ayni gorsel dil
+    lo, hi = min(pooled.values()), max(pooled.values())
+    def shade(v):  # v yuksek (kolay) -> acik; dusuk (zor) -> koyu
+        t = (v - lo) / (hi - lo) if hi > lo else 0.5
+        c0, c1 = (8, 48, 107), (163, 201, 229)  # #08306B -> #A3C9E5
+        return "#%02X%02X%02X" % tuple(round(a + t * (b - a)) for a, b in zip(c0, c1))
+
+    fig, ax = plt.subplots(figsize=(3.2, 2.4))
     ax.xaxis.grid(True)
     for y, c in zip(ys, cats):
-        ax.barh(y, pooled[c], height=0.62, color="#4477AA",
-                edgecolor="white", linewidth=0.4, zorder=3)
+        ax.barh(y, pooled[c], height=0.85, color=shade(pooled[c]),
+                edgecolor="white", linewidth=0.6, zorder=3)
         ax.text(pooled[c] + 1.5, y, f"{pooled[c]:.1f}", ha="left",
                 va="center", fontsize=7.5, color=INK)
     ax.set_yticks(ys)
