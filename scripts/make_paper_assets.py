@@ -256,25 +256,23 @@ def fig_category_overall():
 
 def fig_difficulty_stackbar(dist, total):
     """Soru-zorluk dagilimi: tek yatay %100 stacked bar."""
-    fig, ax = plt.subplots(figsize=(3.6, 0.85))
+    fig, ax = plt.subplots(figsize=(3.6, 0.95))
     left = 0.0
-    for k in sorted(dist, reverse=True):  # 4 -> 0
+    for i, k in enumerate(sorted(dist, reverse=True)):  # 4 -> 0
         v = dist[k]
         ax.barh(0, v, left=left, height=0.5, color=DIFFICULTY_RAMP[k],
                 edgecolor="white", linewidth=1.0, zorder=3)
         cx = left + v / 2
         lab = f"{v} ({100.0 * v / total:.0f}%)"
-        if v >= 10:
-            ax.text(cx, 0, lab, ha="center", va="center", fontsize=7,
-                    color="white" if k <= 1 else "#1A1A1A")
-        else:
-            ax.plot([cx, cx], [0.27, 0.38], color="#888888", linewidth=0.5)
-            ax.text(cx, 0.42, lab, ha="center", va="bottom",
-                    fontsize=7, color=MUTED)
+        y_lab = 0.42 if i % 2 == 0 else 0.72  # dar komsular cakismasin
+        ax.plot([cx, cx], [0.27, y_lab - 0.04], color="#999999",
+                linewidth=0.5, zorder=2)
+        ax.text(cx, y_lab, lab, ha="center", va="bottom",
+                fontsize=7, color=MUTED)
         left += v
 
     ax.set_xlim(0, total)
-    ax.set_ylim(-0.35, 0.62)
+    ax.set_ylim(-0.35, 0.95)
     ax.set_yticks([])
     ax.set_xticks([])
     ax.spines["left"].set_visible(False)
