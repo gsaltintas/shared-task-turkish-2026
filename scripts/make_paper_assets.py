@@ -256,7 +256,7 @@ def fig_category_overall():
 
 def fig_difficulty_stackbar(dist, total):
     """Soru-zorluk dagilimi: tek yatay %100 stacked bar."""
-    fig, ax = plt.subplots(figsize=(3.6, 1.0))
+    fig, ax = plt.subplots(figsize=(3.6, 0.85))
     left = 0.0
     for k in sorted(dist, reverse=True):  # 4 -> 0
         v = dist[k]
@@ -273,15 +273,14 @@ def fig_difficulty_stackbar(dist, total):
         left += v
 
     ax.set_xlim(0, total)
-    ax.set_ylim(-0.55, 0.75)
+    ax.set_ylim(-0.35, 0.62)
     ax.set_yticks([])
-    ax.set_xticks([0, total * 0.25, total * 0.5, total * 0.75, total])
-    ax.set_xticklabels(["0%", "25%", "50%", "75%", "100%"])
-    ax.set_xlabel("Share of questions")
+    ax.set_xticks([])
     ax.spines["left"].set_visible(False)
+    ax.spines["bottom"].set_visible(False)
     ax.legend(handles=_difficulty_legend_handles(dist),
               title="Models correct", title_fontsize=7.5, ncol=5,
-              loc="upper center", bbox_to_anchor=(0.5, -0.52),
+              loc="upper center", bbox_to_anchor=(0.5, -0.02),
               handlelength=1.0, handleheight=1.0, columnspacing=0.9,
               handletextpad=0.4)
 
