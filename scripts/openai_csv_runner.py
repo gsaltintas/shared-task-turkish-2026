@@ -36,6 +36,7 @@ import os
 import sys
 import time
 from pathlib import Path
+from typing import Literal
 
 try:
     import requests  # type: ignore
@@ -62,19 +63,21 @@ QUESTION_COLUMN = "Question"
 
 
 def call_model(
-    question: str, model: str, base_url: str, api_key: str | None, retries: int = 3
+    question: str, model: str, base_url: str, api_key: str | None, retries: int = 3, prompt_language: Literal["tr", "en"] = "tr"
 ) -> str:
     last_error: Exception | None = None
-    prompt_eng = (
+    if prompt_language == "en":
+        prompt = (
         "Answer the question below. Return only the final answer, with no explanation, "
         "no markdown, and no extra text.\n\n"
         f"Question: {question}"
     )
-    prompt_tr = (
+    elif prompt_language == "tr":
+        prompt = (
         "Aşağıdaki soruyu yanıtlayın. Açıklama, markdown veya ekstra metin olmadan sadece nihai cevabı döndürün.\n\n"
         f"Soru: {question}"
     )
-    prompt = prompt_tr
+
     url = base_url.rstrip("/") + "/chat/completions"
     headers = {"Content-Type": "application/json"}
     if api_key:
@@ -104,6 +107,7 @@ def process_csv(
     api_key: str | None,
     delimiter: str,
     num_examples: int | None = None,
+    prompt_language: Literal["tr", "en"] = "tr",
 ) -> None:
     output_path.parent.mkdir(parents=True, exist_ok=True)
 
@@ -134,7 +138,7 @@ def process_csv(
 
                 try:
                     row[OUTPUT_COLUMN] = call_model(
-                        question, model=model, base_url=base_url, api_key=api_key
+                        question, model=model, base_url=base_url, api_key=api_key, prompt_language=prompt_language
                     )
                 except Exception as exc:  # noqa: BLE001 - keep batch processing going
                     row[OUTPUT_COLUMN] = f"ERROR: {exc}"
@@ -180,6 +184,12 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
         help="Number of examples to process (for testing; default: all)",
         default=None,
     )
+    parser.add_argument(
+        "--prompt-language",
+        choices=["en", "tr"],
+        default="tr",
+        help="Language of the prompt to the model (default: tr)",
+    )
     return parser.parse_args(argv)
 
 
@@ -207,6 +217,7 @@ def main(argv: list[str] | None = None) -> int:
         api_key=api_key,
         delimiter=args.delimiter,
         num_examples=num_examples,
+        prompt_language=args.prompt_language,
     )
     print(f"Wrote {output_path}")
     return 0

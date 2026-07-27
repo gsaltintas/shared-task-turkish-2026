@@ -11,6 +11,9 @@ Usage:
     python scripts/gemini_csv_runner.py data/data.tsv -o output/output_gemini_25_flash_lite.tsv  --model=gemini-2.5-flash-lite
     python scripts/gemini_csv_runner.py data/data.tsv -o output/output_gemini_36_flash.tsv  --model="gemini-3.6-flash"
 
+    python scripts/gemini_csv_runner.py data/data.tsv -o output/output_prompt_en_gemini_25_flash_lite.tsv  --model=gemini-2.5-flash-lite --prompt-language=en
+    python scripts/gemini_csv_runner.py data/data.tsv -o output/output_prompt_en_gemini_36_flash.tsv  --model="gemini-3.6-flash" --prompt-language=en
+
 Environment:
     GEMINI_API_KEY must be set.
 """
@@ -23,6 +26,7 @@ import os
 import sys
 import time
 from pathlib import Path
+from typing import Literal
 
 try:
     from google import genai
@@ -43,18 +47,21 @@ def make_client() -> genai.Client:
     return genai.Client(api_key=api_key)
 
 
-def call_gemini(client: genai.Client, question: str, model: str, retries: int = 3) -> str:
+
+def call_gemini(client: genai.Client, question: str, model: str, retries: int = 3, prompt_language: Literal["tr", "en"] = "tr") -> str:
     last_error: Exception | None = None
-    prompt_eng = (
+    if prompt_language == "en":
+        prompt = (
         "Answer the question below. Return only the final answer, with no explanation, "
         "no markdown, and no extra text.\n\n"
         f"Question: {question}"
     )
-    prompt_tr = (
+    elif prompt_language == "tr":
+        prompt = (
         "Aşağıdaki soruyu yanıtlayın. Açıklama, markdown veya ekstra metin olmadan sadece nihai cevabı döndürün.\n\n"
         f"Soru: {question}"
     )
-    prompt = prompt_tr
+
     for attempt in range(1, retries + 1):
         try:
             response = client.models.generate_content(model=model, contents=prompt)
@@ -76,6 +83,7 @@ def process_csv(
     model: str,
     delimiter: str,
     num_examples: int | None = None,
+    prompt_language: Literal["tr", "en"] = "tr",
 ) -> None:
     client = make_client()
     output_path.parent.mkdir(parents=True, exist_ok=True)
@@ -106,7 +114,7 @@ def process_csv(
                     continue
 
                 try:
-                    row[OUTPUT_COLUMN] = call_gemini(client, question, model=model)
+                    row[OUTPUT_COLUMN] = call_gemini(client, question, model=model, prompt_language=prompt_language)
                 except Exception as exc:  # noqa: BLE001 - keep batch processing going
                     row[OUTPUT_COLUMN] = f"ERROR: {exc}"
                     print(f"Row {row_number}: {exc}", file=sys.stderr)
@@ -141,6 +149,12 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
         help="Number of examples to process (for testing; default: all)",
         default=None,
     )
+    parser.add_argument(
+        "--prompt-language",
+        choices=["en", "tr"],
+        default="tr",
+        help="Language of the prompt to Gemini (default: tr)",
+    )
     return parser.parse_args(argv)
 
 
@@ -158,6 +172,7 @@ def main(argv: list[str] | None = None) -> int:
         model=args.model,
         delimiter=args.delimiter,
         num_examples=num_examples,
+        prompt_language=args.prompt_language,
     )
     print(f"Wrote {output_path}")
     return 0
