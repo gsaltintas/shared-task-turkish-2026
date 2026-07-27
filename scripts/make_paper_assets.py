@@ -263,12 +263,13 @@ def fig_difficulty_stackbar(dist, total):
         ax.barh(0, v, left=left, height=0.5, color=DIFFICULTY_RAMP[k],
                 edgecolor="white", linewidth=1.0, zorder=3)
         cx = left + v / 2
+        lab = f"{v} ({100.0 * v / total:.0f}%)"
         if v >= 10:
-            ax.text(cx, 0, str(v), ha="center", va="center", fontsize=7.5,
+            ax.text(cx, 0, lab, ha="center", va="center", fontsize=7,
                     color="white" if k <= 1 else "#1A1A1A")
         else:
             ax.plot([cx, cx], [0.27, 0.38], color="#888888", linewidth=0.5)
-            ax.text(cx, 0.42, str(v), ha="center", va="bottom",
+            ax.text(cx, 0.42, lab, ha="center", va="bottom",
                     fontsize=7, color=MUTED)
         left += v
 
