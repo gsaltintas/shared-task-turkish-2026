@@ -1,0 +1,16 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "shared-task-turkish"
+version = "0.1.0"
+description = "Run analysis on Shared Task questions"
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+    "google-genai>=1.0.0",
+]
+
+[tool.setuptools]
+py-modules = []
