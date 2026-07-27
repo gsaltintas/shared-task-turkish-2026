@@ -35,9 +35,10 @@ VARIANT = "soft (substring)"
 MODELS = OrderedDict([
     ("Qwen3.6-35B-A3B",             "output/output_qwen36.tsv"),
     ("deepseek-v4-flash",           "output/output_deepseek.tsv"),
-    ("gemini-3.6-flash",            "output/output_36_flash.tsv"),
-    ("gemini-2.5-flash-lite-tr",    "output/output_tr_prompt_25_lite.tsv"),
-    ("gemini-2.5-flash-lite-en",    "output/output_eng_prompt_25_lite.tsv"),
+    ("gemini-3.6-flash-tr",         "output/output_36_flash.tsv"),
+    ("gemini-3.6-flash-en",         "output/output_prompt_en_gemini_36_flash.tsv"),
+    ("gemini-2.5-flash-lite-tr",    "output/output_gemini_25_flash_lite.tsv"),
+    ("gemini-2.5-flash-lite-en",    "output/output_prompt_en_gemini_25_flash_lite.tsv"),
 ])
 COLNAME = {name: f"{name} correct" for name in MODELS}
 
