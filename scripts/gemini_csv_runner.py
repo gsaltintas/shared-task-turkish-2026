@@ -8,8 +8,8 @@ The input file is expected to contain a `Question` column. The script preserves
 all original columns and adds a `Gemini Response` column with the model output.
 
 Usage:
-    python scripts/gemini_csv_runner.py data/data.tsv -o output/output_25_flash_lite.tsv 
-    python scripts/gemini_csv_runner.py data/data.tsv -o output/output_36_flash.tsv  --model="gemini-3.6-flash"
+    python scripts/gemini_csv_runner.py data/data.tsv -o output/output_gemini_25_flash_lite.tsv  --model=gemini-2.5-flash-lite
+    python scripts/gemini_csv_runner.py data/data.tsv -o output/output_gemini_36_flash.tsv  --model="gemini-3.6-flash"
 
 Environment:
     GEMINI_API_KEY must be set.
