@@ -214,6 +214,39 @@ def fig_main_results():
     print("yazildi -> paper/figures/main_results.png")
 
 
+def fig_category_overall():
+    """Model-siz kategori accuracy: kategori basina TUM generation'lar
+    havuzlanir (dogru generation / (4 model x n_soru)); yatay bar,
+    kolay->zor sirali."""
+    cats, counts, mat = (None, None, None)
+    mat = {r["Model"]: r for r in read_tsv(ANALYSIS / "model_x_category_accuracy.tsv")}
+    counts = {r["Category"]: r["Questions"]
+              for r in read_tsv(ANALYSIS / "category_accuracy.tsv")}
+    # ayni n uzerinden esit agirlik -> havuzlanmis accuracy = 4-model ortalamasi
+    pooled = {c: np.mean([float(mat[m][c]) for m in MAIN_TR]) for c in counts}
+    cats = sorted(counts, key=lambda c: -pooled[c])
+    ys = np.arange(len(cats))[::-1]
+
+    fig, ax = plt.subplots(figsize=(3.2, 2.6))
+    ax.xaxis.grid(True)
+    for y, c in zip(ys, cats):
+        ax.barh(y, pooled[c], height=0.62, color="#4477AA",
+                edgecolor="white", linewidth=0.4, zorder=3)
+        ax.text(pooled[c] + 1.5, y, f"{pooled[c]:.1f}", ha="left",
+                va="center", fontsize=7.5, color=INK)
+    ax.set_yticks(ys)
+    ax.set_yticklabels([f"{CAT_SHORT[c]} (n={counts[c]})" for c in cats])
+    ax.set_xlim(0, 100)
+    ax.set_xticks([0, 25, 50, 75, 100])
+    ax.set_ylim(-0.55, len(cats) - 0.45)
+    ax.set_xlabel("Accuracy over all generations (%)")
+    ax.tick_params(axis="y", length=0)
+
+    fig.savefig(FIGURES / "category_overall.png")
+    plt.close(fig)
+    print("yazildi -> paper/figures/category_overall.png")
+
+
 def fig_difficulty_stackbar(dist, total):
     """Soru-zorluk dagilimi: tek yatay %100 stacked bar."""
     fig, ax = plt.subplots(figsize=(3.6, 1.0))
@@ -347,6 +380,7 @@ def main():
 
     setup_style()
     fig_main_results()
+    fig_category_overall()
     fig_difficulty_stackbar(dist, total)
     fig_prompt_effect(acc)
     fig_category_accuracy()
