@@ -29,7 +29,8 @@ def strip_diacritics(text: str) -> str:
 
 
 def normalize(text: str, *, strip_accents: bool) -> str:
-    text = text.strip().lower()
+    # Türkçe-uyumlu küçük harf: 'İ'->'i', 'I'->'ı' (Python .lower() bunları yanlış çevirir)
+    text = text.strip().replace("İ", "i").replace("I", "ı").lower()
     if strip_accents:
         text = strip_diacritics(text)
     text = re.sub(r"[^\w\s]", "", text, flags=re.UNICODE)
@@ -71,9 +72,8 @@ def match_variants(gold: str, pred: str) -> dict[str, bool]:
     ascii_pred = normalize(pred, strip_accents=True)
     ascii_match = ascii_pred == ascii_gold
 
-    soft_match = ascii_match or (
-        bool(ascii_gold) and bool(ascii_pred) and (ascii_gold in ascii_pred or ascii_pred in ascii_gold)
-    )
+    # gold'un TAMAMI yanıtta geçiyorsa doğru; kısmi eşleşme (pred, gold'un parçası) sayılmaz
+    soft_match = bool(ascii_gold) and (ascii_gold in ascii_pred)
 
     return {
         "raw": raw_match,
