@@ -256,23 +256,32 @@ def fig_category_overall():
 
 def fig_difficulty_stackbar(dist, total):
     """Soru-zorluk dagilimi: tek yatay %100 stacked bar."""
-    fig, ax = plt.subplots(figsize=(3.6, 0.95))
+    fig, ax = plt.subplots(figsize=(3.6, 1.0))
     left = 0.0
+    LINE, TICK = 0.42, 0.05  # olcu cizgisi yuksekligi ve uc-tik boyu
     for i, k in enumerate(sorted(dist, reverse=True)):  # 4 -> 0
         v = dist[k]
         ax.barh(0, v, left=left, height=0.5, color=DIFFICULTY_RAMP[k],
                 edgecolor="white", linewidth=1.0, zorder=3)
         cx = left + v / 2
         lab = f"{v} ({100.0 * v / total:.0f}%)"
-        y_lab = 0.42 if i % 2 == 0 else 0.72  # dar komsular cakismasin
-        ax.plot([cx, cx], [0.27, y_lab - 0.04], color="#999999",
-                linewidth=0.5, zorder=2)
-        ax.text(cx, y_lab, lab, ha="center", va="bottom",
-                fontsize=7, color=MUTED)
+        # segmentin basini-sonunu gosteren olcu cizgisi (uclarda tik)
+        pad = 0.35
+        xs, xe = left + pad, left + v - pad
+        ax.plot([xs, xe], [LINE, LINE], color="#777777", linewidth=0.6)
+        ax.plot([xs, xs], [LINE - TICK, LINE + TICK], color="#777777", linewidth=0.6)
+        ax.plot([xe, xe], [LINE - TICK, LINE + TICK], color="#777777", linewidth=0.6)
+        if v >= 6:
+            ax.text(cx, LINE + 0.07, lab, ha="center", va="bottom",
+                    fontsize=7, color=MUTED)
+        else:  # cok dar segment: etiket yukarida, kisa baglanti cizgisiyle
+            ax.plot([cx, cx], [LINE + TICK, 0.78], color="#999999", linewidth=0.5)
+            ax.text(cx, 0.80, lab, ha="center", va="bottom",
+                    fontsize=7, color=MUTED)
         left += v
 
     ax.set_xlim(0, total)
-    ax.set_ylim(-0.35, 0.95)
+    ax.set_ylim(-0.35, 1.05)
     ax.set_yticks([])
     ax.set_xticks([])
     ax.spines["left"].set_visible(False)
