@@ -9,6 +9,7 @@ all original columns and adds a `Gemini Response` column with the model output.
 
 Usage:
     python scripts/gemini_csv_runner.py data/data.tsv -o output/output_25_flash_lite.tsv 
+    python scripts/gemini_csv_runner.py data/data.tsv -o output/output_36_flash.tsv  --model="gemini-3.6-flash"
 
 Environment:
     GEMINI_API_KEY must be set.
@@ -33,7 +34,6 @@ except ImportError as exc:  # pragma: no cover - import error shown at runtime
 
 DEFAULT_MODEL = "gemini-2.5-flash-lite"
 QUESTION_COLUMN = "Question"
-OUTPUT_COLUMN = "Gemini Response"
 
 
 def make_client() -> genai.Client:
@@ -88,6 +88,7 @@ def process_csv(
             raise SystemExit(f"Input TSV must contain a '{QUESTION_COLUMN}' column.")
 
         fieldnames = list(reader.fieldnames)
+        OUTPUT_COLUMN = model + " Response"
         if OUTPUT_COLUMN not in fieldnames:
             fieldnames.append(OUTPUT_COLUMN)
 
