@@ -1,0 +1,6 @@
+Model	Cuisine	Literature	Sport	Politics	History	Music	General Knowledge	Media Content	Geography	Movies	General Culture
+gemini-3.6-flash	94.7	100.0	100.0	100.0	93.3	93.3	100.0	90.0	50.0	100.0	100.0
+deepseek-v4-flash	73.7	84.2	62.5	100.0	86.7	66.7	91.7	60.0	50.0	100.0	100.0
+gemini-2.5-flash-lite-en	63.2	73.7	43.8	81.2	80.0	73.3	75.0	30.0	50.0	0.0	100.0
+gemini-2.5-flash-lite-tr	57.9	63.2	37.5	75.0	86.7	46.7	83.3	40.0	50.0	0.0	0.0
+Qwen3.6-35B-A3B	57.9	47.4	31.2	81.2	86.7	26.7	58.3	20.0	100.0	0.0	100.0

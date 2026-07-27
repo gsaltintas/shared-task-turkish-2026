@@ -219,6 +219,5 @@ __marimo__/
 # Streamlit
 .streamlit/secrets.toml
 
-# proje: geçici loglar ve yeniden-üretilebilir analiz çıktıları
+# proje: geçici runtime logları (analiz tabloları analysis/ altında repoda tutulur)
 logs/
-analysis/

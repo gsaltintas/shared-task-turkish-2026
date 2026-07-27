@@ -1,0 +1,6 @@
+Model	Correct	Total	Accuracy(%)
+gemini-3.6-flash	121	126	96.0
+deepseek-v4-flash	99	126	78.6
+gemini-2.5-flash-lite-en	83	126	65.9
+gemini-2.5-flash-lite-tr	76	126	60.3
+Qwen3.6-35B-A3B	67	126	53.2
