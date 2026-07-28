@@ -1,7 +1,7 @@
 Model	Cuisine	Literature	Sport	Politics	History	Music	Media, TV, film, Entertainment	Traditions & Folk Culture	Places & Landmarks
-gemini-3.6-flash-en	89.5	100.0	100.0	100.0	100.0	100.0	91.7	100.0	87.5
-gemini-3.6-flash-tr	89.5	100.0	100.0	100.0	100.0	100.0	91.7	100.0	62.5
-deepseek-v4-flash	73.7	83.3	62.5	100.0	92.9	64.3	66.7	100.0	62.5
-gemini-2.5-flash-lite-en	73.7	83.3	50.0	81.2	78.6	57.1	33.3	88.9	25.0
-gemini-2.5-flash-lite-tr	73.7	77.8	43.8	68.8	78.6	50.0	50.0	66.7	25.0
+gemini-3.6-flash-en	89.5	100.0	100.0	100.0	100.0	100.0	91.7	100.0	100.0
+gemini-3.6-flash-tr	89.5	100.0	100.0	100.0	100.0	100.0	91.7	100.0	75.0
+deepseek-v4-flash	73.7	83.3	62.5	100.0	92.9	64.3	66.7	100.0	75.0
+gemini-2.5-flash-lite-en	73.7	83.3	50.0	81.2	78.6	57.1	33.3	88.9	37.5
+gemini-2.5-flash-lite-tr	73.7	77.8	43.8	68.8	78.6	50.0	50.0	66.7	37.5
 Qwen3.6-35B-A3B	52.6	50.0	31.2	81.2	85.7	28.6	16.7	77.8	62.5
