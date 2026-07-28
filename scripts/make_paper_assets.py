@@ -388,10 +388,18 @@ def fig_category_pie():
               "#DDCC77", "#CC6677", "#882255", "#AA4499"]
 
     fig, ax = plt.subplots(figsize=(3.2, 2.6))
-    ax.pie(sizes, labels=labels, colors=colors, startangle=90,
-           counterclock=False, labeldistance=1.08,
-           wedgeprops=dict(edgecolor="white", linewidth=1.0),
-           textprops=dict(fontsize=7.5, color=INK))
+    wedges, _, autotexts = ax.pie(
+        sizes, labels=labels, colors=colors, startangle=90,
+        counterclock=False, labeldistance=1.08,
+        autopct="%.1f%%", pctdistance=0.68,
+        wedgeprops=dict(edgecolor="white", linewidth=1.0),
+        textprops=dict(fontsize=7.5, color=INK))
+    # koyu dilimde beyaz, acik dilimde koyu yuzde metni
+    light = {"#88CCEE", "#DDCC77", "#999933", "#44AA99", "#CC6677"}
+    for w, t in zip(wedges, autotexts):
+        t.set_fontsize(6.5)
+        hexcol = matplotlib.colors.to_hex(w.get_facecolor()).upper()
+        t.set_color(INK if hexcol in {c.upper() for c in light} else "white")
     ax.set_aspect("equal")
     fig.savefig(FIGURES / "category_pie.png")
     plt.close(fig)
