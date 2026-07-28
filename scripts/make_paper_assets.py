@@ -373,6 +373,31 @@ def fig_category_accuracy():
     print("yazildi -> paper/figures/category_accuracy.png")
 
 
+def fig_category_pie():
+    """Kategori dagilimi: 126 sorunun 9 kategoriye bolunumu (pasta grafik).
+    Dilimler buyukten kucuge, saat yonunde; etiket = kisa ad + soru sayisi."""
+    counts = {}
+    for r in read_tsv(REPO / "data" / "data.tsv"):
+        c = CAT_SHORT[r["Category"]]
+        counts[c] = counts.get(c, 0) + 1
+    items = sorted(counts.items(), key=lambda kv: -kv[1])
+    labels = [f"{c} ({n})" for c, n in items]
+    sizes = [n for _, n in items]
+    # Paul Tol muted, 9 renk (CVD-safe)
+    colors = ["#332288", "#88CCEE", "#44AA99", "#117733", "#999933",
+              "#DDCC77", "#CC6677", "#882255", "#AA4499"]
+
+    fig, ax = plt.subplots(figsize=(3.2, 2.6))
+    ax.pie(sizes, labels=labels, colors=colors, startangle=90,
+           counterclock=False, labeldistance=1.08,
+           wedgeprops=dict(edgecolor="white", linewidth=1.0),
+           textprops=dict(fontsize=7.5, color=INK))
+    ax.set_aspect("equal")
+    fig.savefig(FIGURES / "category_pie.png")
+    plt.close(fig)
+    print("yazildi -> paper/figures/category_pie.png")
+
+
 # =============================================================================
 def main():
     TABLES.mkdir(parents=True, exist_ok=True)
@@ -390,6 +415,7 @@ def main():
     fig_difficulty_stackbar(dist, total)
     fig_prompt_effect(acc)
     fig_category_accuracy()
+    fig_category_pie()
 
     print("\nTamamlandi. paper/tables/*.tex + paper/figures/*.png")
 
