@@ -256,35 +256,24 @@ def fig_category_overall():
 
 def fig_difficulty_stackbar(dist, total):
     """Soru-zorluk dagilimi: tek yatay %100 stacked bar."""
-    fig, ax = plt.subplots(figsize=(3.6, 1.0))
+    fig, ax = plt.subplots(figsize=(3.6, 0.8))
     left = 0.0
-    LINE, TICK = 0.42, 0.05  # olcu cizgisi yuksekligi ve uc-tik boyu
-    for i, k in enumerate(sorted(dist, reverse=True)):  # 4 -> 0
+    for k in sorted(dist, reverse=True):  # 4 -> 0
         v = dist[k]
         ax.barh(0, v, left=left, height=0.5, color=DIFFICULTY_RAMP[k],
                 edgecolor="white", linewidth=1.0, zorder=3)
         cx = left + v / 2
-        pct = f"{100.0 * v / total:.0f}%"
-        # segmentin basini-sonunu gosteren olcu cizgisi (tikler SADECE asagi)
-        pad = 0.35
-        xs, xe = left + pad, left + v - pad
-        ax.plot([xs, xe], [LINE, LINE], color="#777777", linewidth=0.6)
-        ax.plot([xs, xs], [LINE - TICK, LINE], color="#777777", linewidth=0.6)
-        ax.plot([xe, xe], [LINE - TICK, LINE], color="#777777", linewidth=0.6)
         if v >= 6:
-            # adet kutunun ICINDE, yuzde cizginin ustunde
             ax.text(cx, 0, str(v), ha="center", va="center", fontsize=7.5,
                     color="white" if k <= 1 else "#1A1A1A")
-            ax.text(cx, LINE + 0.05, pct, ha="center", va="bottom",
-                    fontsize=7, color=MUTED)
-        else:  # cok dar segment: adet+yuzde yukarida, kisa baglantiyla
-            ax.plot([cx, cx], [LINE, 0.78], color="#999999", linewidth=0.5)
-            ax.text(cx, 0.80, f"{v} ({pct})", ha="center", va="bottom",
+        else:  # cok dar segment: adet yukarida, kisa baglantiyla
+            ax.plot([cx, cx], [0.27, 0.40], color="#999999", linewidth=0.5)
+            ax.text(cx, 0.43, str(v), ha="center", va="bottom",
                     fontsize=7, color=MUTED)
         left += v
 
     ax.set_xlim(0, total)
-    ax.set_ylim(-0.35, 1.05)
+    ax.set_ylim(-0.35, 0.62)
     ax.set_yticks([])
     ax.set_xticks([])
     ax.spines["left"].set_visible(False)
