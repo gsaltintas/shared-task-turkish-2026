@@ -264,19 +264,22 @@ def fig_difficulty_stackbar(dist, total):
         ax.barh(0, v, left=left, height=0.5, color=DIFFICULTY_RAMP[k],
                 edgecolor="white", linewidth=1.0, zorder=3)
         cx = left + v / 2
-        lab = f"{v} ({100.0 * v / total:.0f}%)"
-        # segmentin basini-sonunu gosteren olcu cizgisi (uclarda tik)
+        pct = f"{100.0 * v / total:.0f}%"
+        # segmentin basini-sonunu gosteren olcu cizgisi (tikler SADECE asagi)
         pad = 0.35
         xs, xe = left + pad, left + v - pad
         ax.plot([xs, xe], [LINE, LINE], color="#777777", linewidth=0.6)
-        ax.plot([xs, xs], [LINE - TICK, LINE + TICK], color="#777777", linewidth=0.6)
-        ax.plot([xe, xe], [LINE - TICK, LINE + TICK], color="#777777", linewidth=0.6)
+        ax.plot([xs, xs], [LINE - TICK, LINE], color="#777777", linewidth=0.6)
+        ax.plot([xe, xe], [LINE - TICK, LINE], color="#777777", linewidth=0.6)
         if v >= 6:
-            ax.text(cx, LINE + 0.07, lab, ha="center", va="bottom",
+            # adet kutunun ICINDE, yuzde cizginin ustunde
+            ax.text(cx, 0, str(v), ha="center", va="center", fontsize=7.5,
+                    color="white" if k <= 1 else "#1A1A1A")
+            ax.text(cx, LINE + 0.05, pct, ha="center", va="bottom",
                     fontsize=7, color=MUTED)
-        else:  # cok dar segment: etiket yukarida, kisa baglanti cizgisiyle
-            ax.plot([cx, cx], [LINE + TICK, 0.78], color="#999999", linewidth=0.5)
-            ax.text(cx, 0.80, lab, ha="center", va="bottom",
+        else:  # cok dar segment: adet+yuzde yukarida, kisa baglantiyla
+            ax.plot([cx, cx], [LINE, 0.78], color="#999999", linewidth=0.5)
+            ax.text(cx, 0.80, f"{v} ({pct})", ha="center", va="bottom",
                     fontsize=7, color=MUTED)
         left += v
 
